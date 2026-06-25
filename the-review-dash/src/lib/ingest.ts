@@ -1,4 +1,4 @@
-import { pool, ensureSchema } from "@/lib/db";
+import { pool } from "@/lib/db";
 import { IReviewProvider } from "@/lib/providers/types";
 import { Review, IngestResult } from "@/lib/models";
 import { logger } from "@/lib/logger";
@@ -96,7 +96,7 @@ async function ingestOne(
 export async function runFullIngest(
   provider: IReviewProvider
 ): Promise<IngestResult[]> {
-  await ensureSchema();
+
 
   const results: IngestResult[] = [];
   for (const product of PRODUCTS) {

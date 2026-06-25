@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
-import { pool, ensureSchema } from "@/lib/db";
+import { pool } from "@/lib/db";
 import { logger } from "@/lib/logger";
 
 const PAGE_SIZE = 20;
 
 export async function GET(request: Request) {
   try {
-    await ensureSchema();
 
     const { searchParams } = new URL(request.url);
     const rating = searchParams.get("rating");
@@ -52,7 +51,7 @@ export async function GET(request: Request) {
          rating, reviewed_at, ingested_at, verified, helpful_count
        FROM reviews
        ${where}
-       ORDER BY ingested_at DESC
+       ORDER BY reviewed_at DESC NULLS LAST
        LIMIT $${idx++} OFFSET $${idx++}`,
       values
     );

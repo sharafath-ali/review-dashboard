@@ -29,11 +29,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs && \
     adduser  --system --uid 1001 nextjs
 
-# Copy standalone output
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/public ./public
-
+# Copy standalone output and application files (including migrations and CLI tools)
+COPY --from=builder --chown=nextjs:nodejs /app ./
 USER nextjs
 
 EXPOSE 3000

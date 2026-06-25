@@ -32,6 +32,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    command: sh -c "npx tsx node_modules/knex/bin/cli.js migrate:latest && node .next/standalone/server.js"
     restart: unless-stopped
 
 volumes:
