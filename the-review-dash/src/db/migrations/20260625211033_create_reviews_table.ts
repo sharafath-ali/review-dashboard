@@ -12,7 +12,10 @@ export async function up(knex: Knex): Promise<void> {
     table.text("body").nullable();
     table.smallint("rating").notNullable();
     table.timestamp("reviewed_at", { useTz: true }).nullable();
-    table.timestamp("ingested_at", { useTz: true }).notNullable().defaultTo(knex.fn.now());
+    table
+      .timestamp("ingested_at", { useTz: true })
+      .notNullable()
+      .defaultTo(knex.fn.now());
     table.boolean("verified").notNullable().defaultTo(false);
     table.integer("helpful_count").notNullable().defaultTo(0);
   });
@@ -27,4 +30,3 @@ export async function up(knex: Knex): Promise<void> {
 export async function down(knex: Knex): Promise<void> {
   await knex.schema.dropTableIfExists("reviews");
 }
-

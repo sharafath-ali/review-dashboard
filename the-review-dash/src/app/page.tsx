@@ -20,7 +20,12 @@ type Filter = { rating: string; search: string };
 
 export default function DashboardPage() {
   const [reviews, setReviews] = useState<ReviewRow[]>([]);
-  const [meta, setMeta] = useState({ total: 0, page: 1, pages: 1, pageSize: 20 });
+  const [meta, setMeta] = useState({
+    total: 0,
+    page: 1,
+    pages: 1,
+    pageSize: 20,
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<Filter>({ rating: "", search: "" });
@@ -47,6 +52,7 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchReviews(filter, page);
   }, [fetchReviews, filter, page]);
 
@@ -88,7 +94,11 @@ export default function DashboardPage() {
 
       <main className="max-w-6xl mx-auto px-6 py-8">
         {/* Stats */}
-        <StatsBar total={meta.total} avgRating={avgRating} byRating={byRating} />
+        <StatsBar
+          total={meta.total}
+          avgRating={avgRating}
+          byRating={byRating}
+        />
 
         {/* Filter bar */}
         <div className="flex flex-wrap items-center gap-3 mb-5">
@@ -102,9 +112,14 @@ export default function DashboardPage() {
           />
           <Select
             value={filter.rating || "all"}
-            onValueChange={(v) => setFilterField("rating", (v === "all" || !v) ? "" : v)}
+            onValueChange={(v) =>
+              setFilterField("rating", v === "all" || !v ? "" : v)
+            }
           >
-            <SelectTrigger id="rating-filter" className="w-36 h-9 text-sm bg-white border-slate-200">
+            <SelectTrigger
+              id="rating-filter"
+              className="w-36 h-9 text-sm bg-white border-slate-200"
+            >
               <SelectValue placeholder="All Ratings" />
             </SelectTrigger>
             <SelectContent>
@@ -121,7 +136,10 @@ export default function DashboardPage() {
               id="clear-filters-btn"
               variant="ghost"
               size="sm"
-              onClick={() => { setPage(1); setFilter({ rating: "", search: "" }); }}
+              onClick={() => {
+                setPage(1);
+                setFilter({ rating: "", search: "" });
+              }}
               className="h-9 gap-1.5 text-slate-500 hover:text-slate-700"
             >
               <X className="w-3.5 h-3.5" />
@@ -145,7 +163,11 @@ export default function DashboardPage() {
         ) : error ? (
           <div className="flex flex-col items-center gap-3 py-20 text-center">
             <p className="text-sm text-red-600 font-medium">{error}</p>
-            <Button variant="outline" size="sm" onClick={() => fetchReviews(filter, page)}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => fetchReviews(filter, page)}
+            >
               Retry
             </Button>
           </div>
@@ -206,7 +228,8 @@ export default function DashboardPage() {
 
       <footer className="border-t border-slate-200 mt-16 py-5 bg-white">
         <p className="text-center text-xs text-slate-400">
-          Reviews sourced from Amazon India via Scrapingdog · Stored in PostgreSQL
+          Reviews sourced from Amazon India via Scrapingdog · Stored in
+          PostgreSQL
         </p>
       </footer>
     </div>

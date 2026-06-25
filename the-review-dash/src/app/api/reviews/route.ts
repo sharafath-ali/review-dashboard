@@ -6,7 +6,6 @@ const PAGE_SIZE = 20;
 
 export async function GET(request: Request) {
   try {
-
     const { searchParams } = new URL(request.url);
     const rating = searchParams.get("rating");
     const source = searchParams.get("source");
@@ -29,7 +28,7 @@ export async function GET(request: Request) {
     }
     if (search) {
       conditions.push(
-        `(title ILIKE $${idx} OR body ILIKE $${idx} OR author ILIKE $${idx})`
+        `(title ILIKE $${idx} OR body ILIKE $${idx} OR author ILIKE $${idx})`,
       );
       values.push(`%${search}%`);
       idx++;
@@ -40,7 +39,7 @@ export async function GET(request: Request) {
     // Count for pagination metadata
     const countResult = await pool.query(
       `SELECT COUNT(*) FROM reviews ${where}`,
-      values
+      values,
     );
     const total = parseInt(countResult.rows[0].count, 10);
 
@@ -53,10 +52,14 @@ export async function GET(request: Request) {
        ${where}
        ORDER BY reviewed_at DESC NULLS LAST
        LIMIT $${idx++} OFFSET $${idx++}`,
-      values
+      values,
     );
 
-    logger.info("GET /api/reviews", { total, page, returned: dataResult.rows.length });
+    logger.info("GET /api/reviews", {
+      total,
+      page,
+      returned: dataResult.rows.length,
+    });
 
     return NextResponse.json({
       reviews: dataResult.rows,
@@ -72,7 +75,7 @@ export async function GET(request: Request) {
     logger.error("GET /api/reviews failed", { message: msg });
     return NextResponse.json(
       { error: "Failed to fetch reviews", detail: msg },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

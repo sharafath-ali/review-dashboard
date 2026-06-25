@@ -51,26 +51,26 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ### Environment variables
 
-| Variable | Required | Description |
-|---|---|---|
-| `SCRAPINGDOG_API_KEY` | ✅ | Your Scrapingdog API key |
-| `DATABASE_URL` | ✅ | PostgreSQL connection string |
-| `AMAZON_DOMAIN` | No | `in` for Amazon India (default) |
-| `INGEST_SECRET` | No | Bearer token to protect `POST /api/ingest` |
+| Variable              | Required | Description                                |
+| --------------------- | -------- | ------------------------------------------ |
+| `SCRAPINGDOG_API_KEY` | ✅       | Your Scrapingdog API key                   |
+| `DATABASE_URL`        | ✅       | PostgreSQL connection string               |
+| `AMAZON_DOMAIN`       | No       | `in` for Amazon India (default)            |
+| `INGEST_SECRET`       | No       | Bearer token to protect `POST /api/ingest` |
 
 ## API
 
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/api/reviews` | Returns paginated reviews from DB |
-| `POST` | `/api/ingest` | Triggers a Scrapingdog fetch and upserts to DB |
+| Method | Endpoint       | Description                                    |
+| ------ | -------------- | ---------------------------------------------- |
+| `GET`  | `/api/reviews` | Returns paginated reviews from DB              |
+| `POST` | `/api/ingest`  | Triggers a Scrapingdog fetch and upserts to DB |
 
 ### `GET /api/reviews` query params
 
-| Param | Type | Description |
-|---|---|---|
-| `page` | number | Page number (default: 1) |
-| `rating` | 1–5 | Filter by star rating |
+| Param    | Type   | Description                           |
+| -------- | ------ | ------------------------------------- |
+| `page`   | number | Page number (default: 1)              |
+| `rating` | 1–5    | Filter by star rating                 |
 | `search` | string | Full-text search in title/body/author |
 
 ## Architecture
@@ -91,8 +91,8 @@ Swapping the upstream provider only requires implementing `IReviewProvider` in `
 
 ## Products tracked
 
-| ASIN | Product |
-|---|---|
-| B07RQW6SD5 | KardiaMobile 6L |
+| ASIN       | Product             |
+| ---------- | ------------------- |
+| B07RQW6SD5 | KardiaMobile 6L     |
 | B01A4W8AUK | KardiaMobile 1-Lead |
-| B09TQ3ZN8V | KardiaMobile Card |
+| B09TQ3ZN8V | KardiaMobile Card   |

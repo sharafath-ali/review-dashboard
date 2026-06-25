@@ -1,5 +1,5 @@
-import { Select as SelectPrimitive } from "@base-ui/react/select"
-import { cn } from "@/lib/utils"
+import { Select as SelectPrimitive } from "@base-ui/react/select";
+import { cn } from "@/lib/utils";
 
 export function SelectSeparator({
   className,
@@ -11,5 +11,5 @@ export function SelectSeparator({
       className={cn("pointer-events-none -mx-1 my-1 h-px bg-border", className)}
       {...props}
     />
-  )
+  );
 }

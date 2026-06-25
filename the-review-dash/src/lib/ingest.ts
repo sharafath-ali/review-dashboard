@@ -33,7 +33,7 @@ async function upsertReview(review: Review): Promise<"inserted" | "skipped"> {
       review.reviewedAt,
       review.verified,
       review.helpfulCount,
-    ]
+    ],
   );
   return result.rowCount && result.rowCount > 0 ? "inserted" : "skipped";
 }
@@ -44,7 +44,7 @@ async function upsertReview(review: Review): Promise<"inserted" | "skipped"> {
 async function ingestOne(
   provider: IReviewProvider,
   asin: string,
-  productName: string
+  productName: string,
 ): Promise<IngestResult> {
   const result: IngestResult = {
     asin,
@@ -94,10 +94,8 @@ async function ingestOne(
  * Products are fetched sequentially to avoid hammering the upstream API.
  */
 export async function runFullIngest(
-  provider: IReviewProvider
+  provider: IReviewProvider,
 ): Promise<IngestResult[]> {
-
-
   const results: IngestResult[] = [];
   for (const product of PRODUCTS) {
     const r = await ingestOne(provider, product.asin, product.name);

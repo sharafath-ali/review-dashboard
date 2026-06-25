@@ -9,7 +9,9 @@ interface Props {
 }
 
 export default function RefreshButton({ onRefreshed }: Props) {
-  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">(
+    "idle",
+  );
   const [summary, setSummary] = useState<string | null>(null);
 
   async function handleRefresh() {
@@ -18,12 +20,13 @@ export default function RefreshButton({ onRefreshed }: Props) {
     try {
       const res = await fetch("/api/ingest", { method: "POST" });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.detail ?? data.error ?? "Unknown error");
+      if (!res.ok)
+        throw new Error(data.detail ?? data.error ?? "Unknown error");
       const s = data.summary;
       setSummary(
         `Fetched ${s.totalFetched} · ${s.totalInserted} new · ${s.totalSkipped} duplicate${
           s.totalErrors > 0 ? ` · ${s.totalErrors} error(s)` : ""
-        }`
+        }`,
       );
       setStatus("done");
       onRefreshed();
@@ -49,7 +52,9 @@ export default function RefreshButton({ onRefreshed }: Props) {
         {status === "loading" ? "Fetching…" : "Fetch Reviews"}
       </Button>
       {summary && (
-        <p className={`text-xs ${status === "error" ? "text-red-600" : "text-slate-500"}`}>
+        <p
+          className={`text-xs ${status === "error" ? "text-red-600" : "text-slate-500"}`}
+        >
           {summary}
         </p>
       )}

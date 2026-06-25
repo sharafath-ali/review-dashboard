@@ -1,9 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ExternalLink, Check, Calendar } from "lucide-react";
@@ -25,7 +20,6 @@ export interface ReviewRow {
   helpful_count: number;
 }
 
-
 const SOURCE_LABELS: Record<string, string> = {
   amazon_in: "Amazon India",
   amazon_com: "Amazon US",
@@ -41,23 +35,23 @@ function getRelativeTimeString(dateString: string | null): string {
   if (!dateString) return "";
   const date = new Date(dateString);
   const now = new Date();
-  
+
   // Normalize to UTC start of day for comparison
   const dateMs = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
   const nowMs = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
-  
+
   const diffTime = nowMs - dateMs;
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-  
+
   if (diffDays < 0) return "";
   if (diffDays === 0) return "today";
   if (diffDays === 1) return "yesterday";
   if (diffDays < 30) return `${diffDays} days ago`;
-  
+
   const diffMonths = Math.floor(diffDays / 30);
   if (diffMonths === 1) return "1 month ago";
   if (diffMonths < 12) return `${diffMonths} months ago`;
-  
+
   const diffYears = Math.floor(diffMonths / 12);
   if (diffYears === 1) return "1 year ago";
   return `${diffYears} years ago`;
@@ -65,7 +59,8 @@ function getRelativeTimeString(dateString: string | null): string {
 
 export default function ReviewCard({ review }: { review: ReviewRow }) {
   const sourceLabel = SOURCE_LABELS[review.source] ?? review.source;
-  const productShort = PRODUCT_SHORT[review.product_name] ?? review.product_name;
+  const productShort =
+    PRODUCT_SHORT[review.product_name] ?? review.product_name;
 
   const rawDate = review.reviewed_at || review.ingested_at;
   const dateDisplay = new Date(rawDate).toLocaleDateString("en-IN", {
@@ -73,7 +68,7 @@ export default function ReviewCard({ review }: { review: ReviewRow }) {
     month: "short",
     year: "numeric",
   });
-  
+
   const relativeTime = getRelativeTimeString(rawDate);
 
   return (
@@ -90,7 +85,10 @@ export default function ReviewCard({ review }: { review: ReviewRow }) {
                 {review.rating}.0
               </span>
               {review.verified && (
-                <Badge variant="outline" className="text-[10px] font-medium text-emerald-700 border-emerald-200 bg-emerald-50 py-0 px-1.5 flex items-center gap-0.5">
+                <Badge
+                  variant="outline"
+                  className="text-[10px] font-medium text-emerald-700 border-emerald-200 bg-emerald-50 py-0 px-1.5 flex items-center gap-0.5"
+                >
                   <Check className="w-2.5 h-2.5" />
                   Verified
                 </Badge>
@@ -109,7 +107,7 @@ export default function ReviewCard({ review }: { review: ReviewRow }) {
             KM {productShort}
           </Badge>
         </div>
-        
+
         {/* Secondary Info: ASIN */}
         <div className="text-[11px] text-slate-400 font-mono mt-1">
           ASIN: {review.asin}
@@ -129,17 +127,29 @@ export default function ReviewCard({ review }: { review: ReviewRow }) {
       <CardContent className="px-5 py-3 bg-slate-50/50">
         <div className="flex items-center justify-between gap-2 text-xs text-slate-500">
           <div className="flex items-center gap-1.5 min-w-0">
-            <span className="font-semibold text-slate-700 truncate" title={review.author}>
+            <span
+              className="font-semibold text-slate-700 truncate"
+              title={review.author}
+            >
               {review.author}
             </span>
             <span className="text-slate-300">·</span>
-            <span className="flex items-center gap-1" title={relativeTime ? `${dateDisplay} (${relativeTime})` : dateDisplay}>
+            <span
+              className="flex items-center gap-1"
+              title={
+                relativeTime ? `${dateDisplay} (${relativeTime})` : dateDisplay
+              }
+            >
               <Calendar className="w-3 h-3 text-slate-400" />
               <span>{dateDisplay}</span>
-              {relativeTime && <span className="text-slate-400 text-[10px]">({relativeTime})</span>}
+              {relativeTime && (
+                <span className="text-slate-400 text-[10px]">
+                  ({relativeTime})
+                </span>
+              )}
             </span>
           </div>
-          
+
           <a
             href={`https://www.amazon.in/dp/${review.asin}`}
             target="_blank"

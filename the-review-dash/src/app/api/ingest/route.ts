@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     logger.error("POST /api/ingest — failed", { message: msg });
     return NextResponse.json(
       { error: "Ingestion failed", detail: msg },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

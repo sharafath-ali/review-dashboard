@@ -15,7 +15,9 @@ export default function StatsBar({ total, avgRating, byRating }: Props) {
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-1">
             Total Reviews
           </p>
-          <p className="text-3xl font-bold text-slate-900 tabular-nums">{total.toLocaleString()}</p>
+          <p className="text-3xl font-bold text-slate-900 tabular-nums">
+            {total.toLocaleString()}
+          </p>
           <p className="text-xs text-slate-400 mt-1">in database</p>
         </CardContent>
       </Card>
@@ -45,11 +47,16 @@ export default function StatsBar({ total, avgRating, byRating }: Props) {
           <div className="flex flex-col gap-1.5">
             {[5, 4, 3, 2, 1].map((r) => {
               const count = byRating[r] ?? 0;
-              const totalOnPage = Object.values(byRating).reduce((a, b) => a + b, 0);
+              const totalOnPage = Object.values(byRating).reduce(
+                (a, b) => a + b,
+                0,
+              );
               const pct = totalOnPage > 0 ? (count / totalOnPage) * 100 : 0;
               return (
                 <div key={r} className="flex items-center gap-2 text-xs">
-                  <span className="text-slate-500 w-5 text-right shrink-0">{r}★</span>
+                  <span className="text-slate-500 w-5 text-right shrink-0">
+                    {r}★
+                  </span>
                   <div className="flex-1 h-1.5 rounded-full bg-slate-100 overflow-hidden">
                     <div
                       className="h-1.5 rounded-full bg-blue-500 transition-all duration-500"

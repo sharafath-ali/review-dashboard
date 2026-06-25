@@ -13,9 +13,9 @@ const RETRY_DELAY_MS = 1500;
 interface ScrapingdogReview {
   customer_name?: string;
   customer_profile?: string;
-  rating?: string;           // e.g. "5 out of 5 stars"
+  rating?: string; // e.g. "5 out of 5 stars"
   review_title?: string;
-  date?: string;             // e.g. "Reviewed in India on 5 June 2021"
+  date?: string; // e.g. "Reviewed in India on 5 June 2021"
   review_snippet?: string;
   verified_purchase?: boolean;
 }
@@ -85,7 +85,7 @@ function generateReviewId(
   asin: string,
   customerName: string,
   date: string,
-  title: string
+  title: string,
 ): string {
   return createHash("sha1")
     .update(`${asin}|${customerName}|${date}|${title}`)
@@ -100,7 +100,7 @@ function generateReviewId(
 function normalize(
   raw: ScrapingdogReview,
   asin: string,
-  productName: string
+  productName: string,
 ): Review | null {
   const rating = parseRating(raw.rating);
   if (rating === null) {

@@ -1,3 +1,3 @@
-import { Select as SelectPrimitive } from "@base-ui/react/select"
+import { Select as SelectPrimitive } from "@base-ui/react/select";
 
-export const Select = SelectPrimitive.Root
+export const Select = SelectPrimitive.Root;

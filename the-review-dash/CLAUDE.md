@@ -15,13 +15,13 @@ Do not use mock review data unless explicitly required for testing.
 ## Architecture
 
 Review Provider
-    ↓
+↓
 Review Ingestion Service
-    ↓
+↓
 PostgreSQL
-    ↓
+↓
 REST API
-    ↓
+↓
 Dashboard
 
 ## Requirements
@@ -38,6 +38,7 @@ Dashboard
 ## Database
 
 Store:
+
 - review_id
 - source
 - product_id
@@ -55,5 +56,3 @@ Store:
 - Prefer small reusable modules.
 - Use environment variables for secrets.
 - Add proper error handling and logging.
-
-

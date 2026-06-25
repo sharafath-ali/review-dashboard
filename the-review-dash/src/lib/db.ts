@@ -15,5 +15,3 @@ export const pool: Pool =
 if (process.env.NODE_ENV !== "production") {
   globalForPg.pgPool = pool;
 }
-
-
