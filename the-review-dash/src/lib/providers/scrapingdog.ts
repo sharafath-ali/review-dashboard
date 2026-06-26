@@ -142,7 +142,7 @@ export class ScrapingdogProvider implements IReviewProvider {
     const key = process.env.SCRAPINGDOG_API_KEY;
     if (!key) throw new Error("SCRAPINGDOG_API_KEY env var is not set");
     this.apiKey = key;
-    this.domain = process.env.AMAZON_DOMAIN ?? "in";
+    this.domain = "in";
   }
 
   async fetchReviews(asin: string, productName: string): Promise<Review[]> {

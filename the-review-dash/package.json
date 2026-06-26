@@ -10,7 +10,10 @@
     "lint:fix": "eslint --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "migrate": "tsx node_modules/knex/bin/cli.js migrate:latest"
+    "migrate": "tsx node_modules/knex/bin/cli.js migrate:latest",
+    "docker:run": "docker compose up --build",
+    "docker:db": "docker compose up postgres -d && docker compose run --rm db-migrate",
+    "docker:down": "docker compose down"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

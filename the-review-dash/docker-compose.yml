@@ -27,7 +27,6 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/reviewdash
       # Note: inside Docker, app connects to 'postgres' container directly on 5432
       SCRAPINGDOG_API_KEY: ${SCRAPINGDOG_API_KEY}
-      AMAZON_DOMAIN: ${AMAZON_DOMAIN:-in}
       NODE_ENV: production
     depends_on:
       postgres:

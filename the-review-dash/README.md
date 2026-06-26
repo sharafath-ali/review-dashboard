@@ -55,7 +55,6 @@ Open [http://localhost:3000](http://localhost:3000).
 | --------------------- | -------- | ------------------------------------------ |
 | `SCRAPINGDOG_API_KEY` | ✅       | Your Scrapingdog API key                   |
 | `DATABASE_URL`        | ✅       | PostgreSQL connection string               |
-| `AMAZON_DOMAIN`       | No       | `in` for Amazon India (default)            |
 | `INGEST_SECRET`       | No       | Bearer token to protect `POST /api/ingest` |
 
 ## API
