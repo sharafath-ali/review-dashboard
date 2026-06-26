@@ -1,10 +1,14 @@
 import { NextResponse } from "next/server";
 import { pool } from "@/lib/db";
 import { logger } from "@/lib/logger";
+import { verifyAuth } from "@/lib/auth";
 
 const PAGE_SIZE = 20;
 
 export async function GET(request: Request) {
+  const authError = verifyAuth(request);
+  if (authError) return authError;
+
   try {
     const { searchParams } = new URL(request.url);
     const rating = searchParams.get("rating");

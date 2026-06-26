@@ -6,15 +6,15 @@ Build a review aggregation dashboard using Next.js, PostgreSQL, and a review ing
 
 ## Data Source
 
-Use SCRAPINGDOG API as the upstream review provider.
+Use Rainforest API as the upstream review provider.
 
-The provider returns publicly available Amazon reviews associated with the configured product URLs.
+The provider returns publicly available Amazon reviews associated with the configured product ASINs.
 
 Do not use mock review data unless explicitly required for testing.
 
 ## Architecture
 
-Review Provider
+Review Provider (Rainforest API)
 ↓
 Review Ingestion Service
 ↓
@@ -27,28 +27,31 @@ Dashboard
 ## Requirements
 
 - Normalize review data before persistence.
-- Deduplicate reviews using review ID.
+- Deduplicate reviews using Amazon's canonical review ID.
 - Store reviews in PostgreSQL.
 - Frontend must consume only internal APIs.
-- Handle provider failures gracefully.
+- Handle provider failures and rate-limits gracefully (with retry backoff).
 - Keep provider implementation isolated from business logic.
 - Use TypeScript throughout the project.
 - Follow clean architecture and separation of concerns.
 
 ## Database
 
-Store:
+Store columns:
 
-- review_id
-- source
-- product_id
+- id (primary key)
+- review_id (canonical Amazon review ID, unique)
+- asin
+- product_name
+- source (e.g. amazon_in)
 - author
 - rating
 - title
 - body
-- review_date
-- created_at
-- updated_at
+- reviewed_at (timestamp)
+- ingested_at (timestamp)
+- verified (boolean)
+- helpful_count (integer)
 
 ## Code Quality
 

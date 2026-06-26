@@ -12,7 +12,7 @@ export const PRODUCTS: { asin: string; name: string }[] = [
 
 /**
  * Upsert a single review into the database.
- * ON CONFLICT DO NOTHING means running ingestion twice is idempotent.
+ * ON CONFLICT (review_id) DO UPDATE SET keeps reviews in sync with upstream edits.
  */
 async function upsertReview(review: Review): Promise<"inserted" | "skipped"> {
   const result = await pool.query(

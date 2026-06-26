@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { RainforestProvider } from "@/lib/providers/rainforest";
 import { runFullIngest } from "@/lib/ingest";
 import { logger } from "@/lib/logger";
+import { verifyAuth } from "@/lib/auth";
 
 /**
  * POST /api/ingest
@@ -9,14 +10,8 @@ import { logger } from "@/lib/logger";
  * Protected by a simple bearer token (INGEST_SECRET) to prevent abuse.
  */
 export async function POST(request: Request) {
-  // Simple auth guard
-  const secret = process.env.INGEST_SECRET;
-  if (secret) {
-    const auth = request.headers.get("authorization") ?? "";
-    if (auth !== `Bearer ${secret}`) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-  }
+  const authError = verifyAuth(request);
+  if (authError) return authError;
 
   logger.info("POST /api/ingest — starting ingestion run");
 

@@ -15,10 +15,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ActivitySquare, X } from "lucide-react";
+import { useToast } from "@/components/Toast";
 
 type Filter = { rating: string; search: string; asin: string };
 
 export default function DashboardPage() {
+  const { addToast } = useToast();
   const [reviews, setReviews] = useState<ReviewRow[]>([]);
   const [meta, setMeta] = useState({
     total: 0,
@@ -42,38 +44,59 @@ export default function DashboardPage() {
   useEffect(() => {
     async function loadProducts() {
       try {
-        const res = await fetch("/api/products");
+        const res = await fetch("/api/products", {
+          headers: {
+            Authorization: `Bearer ${process.env.INGEST_SECRET || ""}`,
+          },
+        });
+        const data = await res.json();
         if (res.ok) {
-          const data = await res.json();
           setProducts(data.products || []);
+          addToast("Products loaded successfully", "success");
+        } else {
+          throw new Error(data.error || "Failed to load products");
         }
       } catch (err) {
+        const errorMsg =
+          err instanceof Error ? err.message : "Failed to load products list";
         console.error("Failed to load products list", err);
+        addToast(errorMsg, "error");
       }
     }
     loadProducts();
-  }, []);
+  }, [addToast]);
 
-  const fetchReviews = useCallback(async (f: Filter, p: number) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const params = new URLSearchParams();
-      if (f.rating) params.set("rating", f.rating);
-      if (f.search) params.set("search", f.search);
-      if (f.asin) params.set("asin", f.asin);
-      params.set("page", String(p));
-      const res = await fetch(`/api/reviews?${params}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      setReviews(data.reviews);
-      setMeta(data.meta);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load reviews");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const fetchReviews = useCallback(
+    async (f: Filter, p: number) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const params = new URLSearchParams();
+        if (f.rating) params.set("rating", f.rating);
+        if (f.search) params.set("search", f.search);
+        if (f.asin) params.set("asin", f.asin);
+        params.set("page", String(p));
+        const res = await fetch(`/api/reviews?${params}`, {
+          headers: {
+            Authorization: `Bearer ${process.env.INGEST_SECRET || ""}`,
+          },
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+        setReviews(data.reviews);
+        setMeta(data.meta);
+        addToast("Reviews loaded successfully", "success");
+      } catch (err) {
+        const errorMsg =
+          err instanceof Error ? err.message : "Failed to load reviews";
+        setError(errorMsg);
+        addToast(errorMsg, "error");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [addToast],
+  );
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect

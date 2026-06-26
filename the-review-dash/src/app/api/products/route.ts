@@ -2,8 +2,11 @@ import { NextResponse } from "next/server";
 import { pool } from "@/lib/db";
 import { PRODUCTS } from "@/lib/ingest";
 import { logger } from "@/lib/logger";
+import { verifyAuth } from "@/lib/auth";
 
-export async function GET() {
+export async function GET(request: Request) {
+  const authError = verifyAuth(request);
+  if (authError) return authError;
   try {
     const result = await pool.query(
       `SELECT DISTINCT asin, product_name as name FROM reviews ORDER BY product_name ASC`,

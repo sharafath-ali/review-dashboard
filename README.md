@@ -17,6 +17,21 @@ We use a modern, robust, and clean architecture stack:
 
 ---
 
+## Key Features
+
+* **Offset-Based Pagination & Multi-Filtering**:
+  * Offset-based pagination for performant review loading.
+  * Filters for **Rating**, **Product (ASIN)**, **Source (e.g., amazon_in)**, and **Text search** (matching title, body, author).
+* **Reusable `RainforestProvider` Class**:
+  * Decoupled and reusable provider class that implements `IReviewProvider`, allowing easy instantiation and multiple reuses.
+* **Rate-Limit & Timeout Resilience**:
+  * 3-attempt request retry loop with linear backoff (sleeping for 1.5s, then 3.0s) to handle temporary provider rate limits or timeouts.
+* **Bearer Token Authorization**: Every API endpoint is secured using `process.env.INGEST_SECRET` bearer validation.
+* **Global Toast Notifications**: Unified green/red toast banners feedback status instantly for every client fetch request.
+* **Structured JSON Logging**: Centralized logger class providing machine-readable logs across API routes, ingestion services, and provider fetch requests.
+
+---
+
 ## Review Ingestion & Deduplication Logic
 
 ### Current Strategy
@@ -50,9 +65,12 @@ cd reviewer/the-review-dash
   cp .env.example .env
   ```
 * Register at [Rainforest API](https://www.rainforestapi.com/) to get a free API key (comes with 100 free request credits).
-* Open the `.env` file and set the key:
+* Open the `.env` file and configure the keys:
+  * `RAINFOREST_API_KEY`: Set your Rainforest API key.
+  * `INGEST_SECRET`: Set a shared bearer secret (e.g. `8251CDEE21734908E7BB1CB0`) to authenticate and protect all API routes.
   ```env
   RAINFOREST_API_KEY=your_rainforest_api_key
+  INGEST_SECRET=your_shared_bearer_token
   ```
 
 Select one of the following options to run the application:

@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
+import { useToast } from "@/components/Toast";
 
 interface Props {
   onRefreshed: () => void;
 }
 
 export default function RefreshButton({ onRefreshed }: Props) {
+  const { addToast } = useToast();
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">(
     "idle",
   );
@@ -18,7 +20,12 @@ export default function RefreshButton({ onRefreshed }: Props) {
     setStatus("loading");
     setSummary(null);
     try {
-      const res = await fetch("/api/ingest", { method: "POST" });
+      const res = await fetch("/api/ingest", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.INGEST_SECRET || ""}`,
+        },
+      });
       const data = await res.json();
       if (!res.ok)
         throw new Error(data.detail ?? data.error ?? "Unknown error");
@@ -29,10 +36,16 @@ export default function RefreshButton({ onRefreshed }: Props) {
         }`,
       );
       setStatus("done");
+      addToast(
+        `Ingested ${s.totalInserted} reviews successfully! (${s.totalFetched} fetched)`,
+        "success",
+      );
       onRefreshed();
     } catch (err) {
-      setSummary(err instanceof Error ? err.message : "Ingestion failed");
+      const errorMsg = err instanceof Error ? err.message : "Ingestion failed";
+      setSummary(errorMsg);
       setStatus("error");
+      addToast(`Ingestion failed: ${errorMsg}`, "error");
     }
   }
 
