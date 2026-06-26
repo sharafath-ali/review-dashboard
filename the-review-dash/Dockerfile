@@ -17,6 +17,9 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV DATABASE_URL=postgresql://placeholder:placeholder@placeholder:5432/placeholder
 ENV RAINFOREST_API_KEY=placeholder
 
+ARG INGEST_SECRET
+ENV INGEST_SECRET=$INGEST_SECRET
+
 RUN npm run build && \
     cp -r .next/static .next/standalone/.next/ && \
     cp -r public .next/standalone/

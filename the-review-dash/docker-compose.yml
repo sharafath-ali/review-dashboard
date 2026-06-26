@@ -20,6 +20,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - INGEST_SECRET=${INGEST_SECRET}
     container_name: reviewdash-app
     ports:
       - "3000:3000"
@@ -27,6 +29,7 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/reviewdash
       # Note: inside Docker, app connects to 'postgres' container directly on 5432
       RAINFOREST_API_KEY: ${RAINFOREST_API_KEY}
+      INGEST_SECRET: ${INGEST_SECRET}
       NODE_ENV: production
     depends_on:
       postgres:
@@ -38,6 +41,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - INGEST_SECRET=${INGEST_SECRET}
     container_name: reviewdash-migration
     environment:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/reviewdash
