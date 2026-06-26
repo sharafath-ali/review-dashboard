@@ -38,20 +38,22 @@ If the platform expands to track reviews from other e-commerce websites (e.g., F
 
 ## Setup & Quick Start
 
-Please navigate into the workspace directory:
+**1. Clone the repository and navigate to the application folder:**
 ```bash
-cd the-review-dash
+git clone <repository_url>
+cd reviewer/the-review-dash
 ```
 
-Configure your environment keys first:
-1. Copy the example `.env` file:
-   ```bash
-   cp .env.example .env
-   ```
-2. Edit the `.env` file and set your key:
-   ```env
-   RAINFOREST_API_KEY=ur_key_from_
-   ```
+**2. Configure your environment variables:**
+* Copy the example `.env` template:
+  ```bash
+  cp .env.example .env
+  ```
+* Register at [Rainforest API](https://www.rainforestapi.com/) to get a free API key (comes with 100 free request credits).
+* Open the `.env` file and set the key:
+  ```env
+  RAINFOREST_API_KEY=your_rainforest_api_key
+  ```
 
 Select one of the following options to run the application:
 
