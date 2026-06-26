@@ -34,5 +34,17 @@ services:
     command: sh -c "npx tsx node_modules/knex/bin/cli.js migrate:latest && node .next/standalone/server.js"
     restart: unless-stopped
 
+  db-migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: reviewdash-migration
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/reviewdash
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: npx tsx node_modules/knex/bin/cli.js migrate:latest
+
 volumes:
   postgres_data:

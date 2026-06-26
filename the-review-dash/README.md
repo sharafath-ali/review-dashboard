@@ -11,41 +11,52 @@ Internal dashboard for AliveCor KardiaMobile Amazon reviews.
 
 ## Quick Start
 
-### Option A — Docker (everything in one command)
+### Option A — Full Docker Stack (Runs everything in Docker)
+
+Best for a quick preview or testing without setting up Node.js locally.
 
 ```bash
-# 1. Copy the env template and add your Scrapingdog API key
-cp .env.example .env
-# Edit .env and set SCRAPINGDOG_API_KEY=your_key_here
+# 1. Clone the repository and navigate into the app folder
+cd the-review-dash
 
-# 2. Start everything (PostgreSQL + Next.js app)
-docker-compose up --build
+# 2. Copy the environment template and set your SCRAPINGDOG_API_KEY
+cp .env.example .env
+# Edit .env and configure:
+# SCRAPINGDOG_API_KEY=your_key_here
+
+# 3. Start everything in Docker (PostgreSQL + Automatic Migrations + Next.js App)
+npm run docker:run
 ```
 
-Open [http://localhost:3000](http://localhost:3000) — the app and database start together.
-
-> **First run:** Click **Fetch Reviews** in the dashboard to pull real Amazon reviews into the database.
+Open [http://localhost:3000](http://localhost:3000) to view the dashboard.
 
 ---
 
-### Option B — Local development
+### Option B — Hybrid / Local Development (Database in Docker, App running locally)
+
+Best for developing, editing code, and fast hot-reloads.
 
 ```bash
-# 1. Install dependencies
+# 1. Clone the repository and navigate into the app folder
+cd the-review-dash
+
+# 2. Install local dependencies
 npm install
 
-# 2. Set up environment
+# 3. Set up local environment variables
 cp .env.example .env.local
-# Edit .env.local with your SCRAPINGDOG_API_KEY and DATABASE_URL
+# Edit .env.local and configure:
+# SCRAPINGDOG_API_KEY=your_key_here
+# (DATABASE_URL defaults to the local Docker database port 5433)
 
-# 3. Start PostgreSQL (Docker just for the DB)
-docker-compose up postgres -d
+# 4. Start the database in Docker and automatically run migrations
+npm run docker:db
 
-# 4. Run the dev server
+# 5. Start the Next.js development server locally
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3000](http://localhost:3000) to view the dashboard.
 
 ---
 
