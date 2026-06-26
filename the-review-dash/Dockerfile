@@ -17,7 +17,9 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV DATABASE_URL=postgresql://placeholder:placeholder@placeholder:5432/placeholder
 ENV SCRAPINGDOG_API_KEY=placeholder
 
-RUN npm run build
+RUN npm run build && \
+    cp -r .next/static .next/standalone/.next/ && \
+    cp -r public .next/standalone/
 
 # ─── Stage 3: runner ─────────────────────────────────────────────────────────
 FROM node:20-alpine AS runner

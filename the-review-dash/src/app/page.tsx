@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ActivitySquare, X } from "lucide-react";
 
-type Filter = { rating: string; search: string };
+type Filter = { rating: string; search: string; asin: string };
 
 export default function DashboardPage() {
   const [reviews, setReviews] = useState<ReviewRow[]>([]);
@@ -28,8 +28,31 @@ export default function DashboardPage() {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<Filter>({ rating: "", search: "" });
+  const [filter, setFilter] = useState<Filter>({
+    rating: "",
+    search: "",
+    asin: "",
+  });
   const [page, setPage] = useState(1);
+  const [products, setProducts] = useState<{ asin: string; name: string }[]>(
+    [],
+  );
+
+  // Fetch products list on mount
+  useEffect(() => {
+    async function loadProducts() {
+      try {
+        const res = await fetch("/api/products");
+        if (res.ok) {
+          const data = await res.json();
+          setProducts(data.products || []);
+        }
+      } catch (err) {
+        console.error("Failed to load products list", err);
+      }
+    }
+    loadProducts();
+  }, []);
 
   const fetchReviews = useCallback(async (f: Filter, p: number) => {
     setLoading(true);
@@ -38,6 +61,7 @@ export default function DashboardPage() {
       const params = new URLSearchParams();
       if (f.rating) params.set("rating", f.rating);
       if (f.search) params.set("search", f.search);
+      if (f.asin) params.set("asin", f.asin);
       params.set("page", String(p));
       const res = await fetch(`/api/reviews?${params}`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -65,7 +89,7 @@ export default function DashboardPage() {
       ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length
       : NaN;
 
-  const hasFilters = filter.rating || filter.search;
+  const hasFilters = filter.rating || filter.search || filter.asin;
 
   function setFilterField(key: keyof Filter, value: string) {
     setPage(1);
@@ -131,6 +155,29 @@ export default function DashboardPage() {
               ))}
             </SelectContent>
           </Select>
+
+          <Select
+            value={filter.asin || "all"}
+            onValueChange={(v) =>
+              setFilterField("asin", v === "all" || !v ? "" : v)
+            }
+          >
+            <SelectTrigger
+              id="product-filter"
+              className="w-48 h-9 text-sm bg-white border-slate-200"
+            >
+              <SelectValue placeholder="All Products" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Products</SelectItem>
+              {products.map((p) => (
+                <SelectItem key={p.asin} value={p.asin}>
+                  {p.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
           {hasFilters && (
             <Button
               id="clear-filters-btn"
@@ -138,7 +185,7 @@ export default function DashboardPage() {
               size="sm"
               onClick={() => {
                 setPage(1);
-                setFilter({ rating: "", search: "" });
+                setFilter({ rating: "", search: "", asin: "" });
               }}
               className="h-9 gap-1.5 text-slate-500 hover:text-slate-700"
             >
@@ -186,6 +233,8 @@ export default function DashboardPage() {
             <p className="text-xs text-slate-400 mb-4">
               Showing {reviews.length} of {meta.total} review
               {meta.total !== 1 ? "s" : ""}
+              {filter.asin &&
+                ` · ${products.find((p) => p.asin === filter.asin)?.name || filter.asin}`}
               {filter.rating && ` · ${filter.rating}★ only`}
               {filter.search && ` · "${filter.search}"`}
             </p>

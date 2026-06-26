@@ -10,6 +10,7 @@ export async function GET(request: Request) {
     const rating = searchParams.get("rating");
     const source = searchParams.get("source");
     const search = searchParams.get("search");
+    const asin = searchParams.get("asin");
     const pageParam = parseInt(searchParams.get("page") ?? "1", 10);
     const page = isNaN(pageParam) || pageParam < 1 ? 1 : pageParam;
     const offset = (page - 1) * PAGE_SIZE;
@@ -21,6 +22,10 @@ export async function GET(request: Request) {
     if (rating) {
       conditions.push(`rating = $${idx++}`);
       values.push(parseInt(rating, 10));
+    }
+    if (asin) {
+      conditions.push(`asin = $${idx++}`);
+      values.push(asin);
     }
     if (source) {
       conditions.push(`source = $${idx++}`);
