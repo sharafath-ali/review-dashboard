@@ -20,7 +20,18 @@ async function upsertReview(review: Review): Promise<"inserted" | "skipped"> {
        (review_id, asin, product_name, source, author, title, body,
         rating, reviewed_at, verified, helpful_count)
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
-     ON CONFLICT (review_id) DO NOTHING`,
+     ON CONFLICT (review_id) DO UPDATE SET
+       asin = EXCLUDED.asin,
+       product_name = EXCLUDED.product_name,
+       source = EXCLUDED.source,
+       author = EXCLUDED.author,
+       title = EXCLUDED.title,
+       body = EXCLUDED.body,
+       rating = EXCLUDED.rating,
+       reviewed_at = EXCLUDED.reviewed_at,
+       verified = EXCLUDED.verified,
+       helpful_count = EXCLUDED.helpful_count,
+       ingested_at = NOW()`,
     [
       review.reviewId,
       review.asin,

@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { ScrapingdogProvider } from "@/lib/providers/scrapingdog";
+import { RainforestProvider } from "@/lib/providers/rainforest";
 import { runFullIngest } from "@/lib/ingest";
 import { logger } from "@/lib/logger";
 
 /**
  * POST /api/ingest
- * Triggers a full review fetch from Scrapingdog and stores results in the DB.
+ * Triggers a full review fetch from Rainforest API and stores results in the DB.
  * Protected by a simple bearer token (INGEST_SECRET) to prevent abuse.
  */
 export async function POST(request: Request) {
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
   logger.info("POST /api/ingest — starting ingestion run");
 
   try {
-    const provider = new ScrapingdogProvider();
+    const provider = new RainforestProvider();
     const results = await runFullIngest(provider);
 
     const summary = {

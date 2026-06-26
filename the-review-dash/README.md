@@ -5,8 +5,8 @@ Internal dashboard for AliveCor KardiaMobile Amazon reviews.
 ## Stack
 
 - **Next.js 15** (App Router, TypeScript)
-- **PostgreSQL** — review storage, deduplication via `ON CONFLICT DO NOTHING`
-- **Scrapingdog** — upstream review provider (public Amazon reviews)
+- **PostgreSQL** — review storage, deduplication via `ON CONFLICT DO UPDATE`
+- **Rainforest API** — upstream review provider (public Amazon reviews)
 - **Tailwind CSS** — styling
 
 ## Quick Start
@@ -19,10 +19,10 @@ Best for a quick preview or testing without setting up Node.js locally.
 # 1. Clone the repository and navigate into the app folder
 cd the-review-dash
 
-# 2. Copy the environment template and set your SCRAPINGDOG_API_KEY
+# 2. Copy the environment template and set your RAINFOREST_API_KEY
 cp .env.example .env
 # Edit .env and configure:
-# SCRAPINGDOG_API_KEY=your_key_here
+# RAINFOREST_API_KEY=your_key_here
 
 # 3. Start everything in Docker (PostgreSQL + Automatic Migrations + Next.js App)
 npm run docker:run
@@ -46,7 +46,7 @@ npm install
 # 3. Set up local environment variables
 cp .env.example .env.local
 # Edit .env.local and configure:
-# SCRAPINGDOG_API_KEY=your_key_here
+# RAINFOREST_API_KEY=your_key_here
 # (DATABASE_URL defaults to the local Docker database port 5433)
 
 # 4. Start the database in Docker and automatically run migrations
@@ -62,18 +62,18 @@ Open [http://localhost:3000](http://localhost:3000) to view the dashboard.
 
 ### Environment variables
 
-| Variable              | Required | Description                                |
-| --------------------- | -------- | ------------------------------------------ |
-| `SCRAPINGDOG_API_KEY` | ✅       | Your Scrapingdog API key                   |
-| `DATABASE_URL`        | ✅       | PostgreSQL connection string               |
-| `INGEST_SECRET`       | No       | Bearer token to protect `POST /api/ingest` |
+| Variable             | Required | Description                                |
+| -------------------- | -------- | ------------------------------------------ |
+| `RAINFOREST_API_KEY` | ✅       | Your Rainforest API key                    |
+| `DATABASE_URL`       | ✅       | PostgreSQL connection string               |
+| `INGEST_SECRET`      | No       | Bearer token to protect `POST /api/ingest` |
 
 ## API
 
-| Method | Endpoint       | Description                                    |
-| ------ | -------------- | ---------------------------------------------- |
-| `GET`  | `/api/reviews` | Returns paginated reviews from DB              |
-| `POST` | `/api/ingest`  | Triggers a Scrapingdog fetch and upserts to DB |
+| Method | Endpoint       | Description                                       |
+| ------ | -------------- | ------------------------------------------------- |
+| `GET`  | `/api/reviews` | Returns paginated reviews from DB                 |
+| `POST` | `/api/ingest`  | Triggers a Rainforest API fetch and upserts to DB |
 
 ### `GET /api/reviews` query params
 
@@ -91,8 +91,8 @@ Browser
   └─► POST /api/ingest          (triggers upstream fetch)
 
 Ingest pipeline:
-  ScrapingdogProvider
-    └─► GET api.scrapingdog.com/amazon/product (per ASIN)
+  RainforestProvider
+    └─► GET api.rainforestapi.com/request (per ASIN)
     └─► normalize() → canonical Review model
     └─► UPSERT into PostgreSQL (deduplicated by review_id)
 ```

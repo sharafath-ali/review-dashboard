@@ -15,7 +15,7 @@ COPY . .
 # Dummy env so Next.js build doesn't fail on missing vars
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV DATABASE_URL=postgresql://placeholder:placeholder@placeholder:5432/placeholder
-ENV SCRAPINGDOG_API_KEY=placeholder
+ENV RAINFOREST_API_KEY=placeholder
 
 RUN npm run build && \
     cp -r .next/static .next/standalone/.next/ && \
